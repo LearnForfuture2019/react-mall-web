@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React, {Component} from 'react'
 
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
@@ -8,23 +8,29 @@ import {
     TeamOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-
+import logo from '../../assets/imgs/logo.png'
+import './index.css'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-export default class Frame extends Component{
+
+export default class Frame extends Component {
     state = {
         collapsed: false,
     };
 
-    onCollapse = collapsed => {
-        console.log(collapsed);
-        this.setState({ collapsed });
+    toggle = () => {
+        this.setState({
+            collapsed: !this.state.collapsed,
+        });
     };
-    render(){
+
+    render() {
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-                    <div className="logo" />
+                    <div className="logo admin-logo" >
+                        <img src={logo} alt="admin"/>
+                    </div>
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                         <Menu.Item key="1" icon={<PieChartOutlined />}>
                             Option 1
