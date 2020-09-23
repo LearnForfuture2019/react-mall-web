@@ -1,5 +1,21 @@
-/*config-overrides.js*/
-const {override, fixBabelImports} = require('customize-cra');
+const path = require('path')
+const {override, fixBabelImports,addDecoratorsLegacy} = require('customize-cra')
+
+function resolve(dir) {
+    return path.join(__dirname, dir)
+}
+
+const customize = () => (config, env) => {
+    config.resolve.alias['@'] = resolve('src')
+    if (env === 'production') {
+        config.externals = {
+            'react': 'React',
+            'react-dom': 'ReactDOM'
+        }
+    }
+
+    return config
+}
 
 module.exports = override(
     fixBabelImports('import', {
@@ -7,4 +23,6 @@ module.exports = override(
         libraryDirectory: 'es',
         style: 'css',
     }),
+    addDecoratorsLegacy(),
+    customize()
 );

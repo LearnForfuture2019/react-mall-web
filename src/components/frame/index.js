@@ -1,19 +1,16 @@
 import React, {Component} from 'react'
 
 import { Layout, Menu, Breadcrumb } from 'antd';
-import {
-    DesktopOutlined,
-    PieChartOutlined,
-    FileOutlined,
-    TeamOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
-import logo from '../../assets/imgs/logo.png'
-import './index.css'
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
 
-export default class Frame extends Component {
+import logo from '../../assets/imgs/logo.png'
+import {adminRouteSecond} from '../../routes'
+import {withRouter} from 'react-router-dom'
+import './index.css'
+const { Header, Content,Footer, Sider } = Layout;
+
+const menus = adminRouteSecond.filter(item =>item.isNav)
+@withRouter
+class Frame extends Component {
     state = {
         collapsed: false,
     };
@@ -25,45 +22,57 @@ export default class Frame extends Component {
     };
 
     render() {
+        console.log(this.props)
         return (
-            <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+            <Layout>
+                <Header className="header">
                     <div className="logo admin-logo" >
-                        <img src={logo} alt="admin"/>
+                        <img src={logo} alt="logo"/>
                     </div>
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                        <Menu.Item key="1" icon={<PieChartOutlined />}>
-                            Option 1
-                        </Menu.Item>
-                        <Menu.Item key="2" icon={<DesktopOutlined />}>
-                            Option 2
-                        </Menu.Item>
-                        <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                            <Menu.Item key="3">Tom</Menu.Item>
-                            <Menu.Item key="4">Bill</Menu.Item>
-                            <Menu.Item key="5">Alex</Menu.Item>
-                        </SubMenu>
-                        <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                            <Menu.Item key="6">Team 1</Menu.Item>
-                            <Menu.Item key="8">Team 2</Menu.Item>
-                        </SubMenu>
-                        <Menu.Item key="9" icon={<FileOutlined />} />
-                    </Menu>
-                </Sider>
-                <Layout className="site-layout">
-                    <Header className="site-layout-background" style={{ padding: 0 }} />
-                    <Content style={{ margin: '0 16px' }}>
+                </Header>
+                <Layout>
+                    <Sider width={200} className="site-layout-background">
+                        <Menu
+                            mode="inline"
+                            defaultSelectedKeys={['1']}
+                            style={{ height: '100%', borderRight: 0 }}
+                        >
+                            {
+                                menus.map(item =>{
+                                    return (
+                                        <Menu.Item
+                                            key={item.pathname}
+                                            icon={item.icon}
+                                        >
+                                            {item.title}
+                                        </Menu.Item>
+
+                                    )
+                                })
+                            }
+                        </Menu>
+                    </Sider>
+                    <Layout style={{ padding: '0 24px 24px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+                            <Breadcrumb.Item>Home</Breadcrumb.Item>
+                            <Breadcrumb.Item>List</Breadcrumb.Item>
+                            <Breadcrumb.Item>App</Breadcrumb.Item>
                         </Breadcrumb>
-                        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                            Bill is a cat.
-                        </div>
-                    </Content>
-                    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                        <Content
+                            className="site-layout-background"
+                            style={{
+                                padding: 24,
+                                margin: 0,
+                                minHeight: 280,
+                            }}
+                        >
+                            {this.props.children}
+                        </Content>
+                        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+                    </Layout>
                 </Layout>
             </Layout>
         )
     }
 }
+export default Frame
