@@ -18,24 +18,53 @@ const subMenus = adminRouteSecond.filter(item => item.subNav)
 @withRouter
 class Frame extends Component {
 
+    state = {
+        title:'',
+        subTitle:''//二级导航条标题
+
+    }
     //切换页面
     /*
     * handleNav 操控的是Menu.Item
     * handleSubMenuClick 操控的是第一级目录
     *
     * */
-    handleNav = ({item, key, keyPath, domEvent}) => {
-        console.log({item})
+    handleNav = ({item, key, keyPath}) => {
+        //获取一级标题与二级标题
+        const title = this.getTitle(keyPath[1])
+        if (key !== '/admin/dashboard'){
+            const subTitle = item.node.innerText
+
+            this.setState({
+                title,
+                subTitle
+            })
+        }
+
         this.props.history.replace(key)
     }
     handleSubMenuClick = ({key}) => {
         this.props.history.replace(key)
     }
 
+    getTitle = (pathname)=>{
+        if (pathname === '/admin/item'){
+            return '商品'
+        }else if (pathname === '/admin/order'){
+            return '订单'
+        }else if(pathname === '/admin/marketing'){
+            return '营销'
+        }else if (pathname === '/admin/permission'){
+            return '权限'
+        }
+    }
+
+
 
     render() {
         const {pathname} = this.props.location
         const targetPath = pathname === '/admin' ? '/admin/dashboard' : pathname
+        const {title,subTitle} = this.state
         return (
             <Layout>
                 <Header className="header">
@@ -47,7 +76,7 @@ class Frame extends Component {
                     <Sider width={200} className="site-layout-background">
                         <Menu
                             mode="inline"
-                            defaultSelectedKeys={targetPath}
+                            selectedKeys={targetPath}
                             style={{height: '100%', borderRight: 0}}
                             onClick={this.handleNav}
                         >
@@ -104,8 +133,12 @@ class Frame extends Component {
                     <Layout style={{padding: '0 24px 24px'}}>
                         <Breadcrumb style={{margin: '16px 0'}}>
                             <Breadcrumb.Item>首页</Breadcrumb.Item>
-                            <Breadcrumb.Item>List</Breadcrumb.Item>
-                            <Breadcrumb.Item>App</Breadcrumb.Item>
+                            {
+                                title?<Breadcrumb.Item>{title}</Breadcrumb.Item>:null
+                            }
+                            {
+                                subTitle?<Breadcrumb.Item>{subTitle}</Breadcrumb.Item>:null
+                            }
                         </Breadcrumb>
                         <Content
                             className="site-layout-background"
