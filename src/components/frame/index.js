@@ -8,20 +8,25 @@ import {withRouter} from 'react-router-dom'
 import './index.css'
 
 const {Header, Content, Footer, Sider} = Layout;
+const {SubMenu} = Menu
 
 const menus = adminRouteSecond.filter(item => item.isNav)
+const subMenus = adminRouteSecond.filter(item => item.subNav)
+
+/*映射表，用于完成面包屑功能*/
 
 @withRouter
 class Frame extends Component {
+
     //切换页面
-    handleNav = ({key}) => {
+    handleNav = ({item, key, keyPath, domEvent}) => {
+        console.log({item, keyPath, domEvent})
         this.props.history.replace(key)
     }
 
     render() {
         const {pathname} = this.props.location
-        const targetPath =  pathname=== '/admin'?'/admin/dashboard':pathname
-        console.log(pathname)
+        const targetPath = pathname === '/admin' ? '/admin/dashboard' : pathname
         return (
             <Layout>
                 <Header className="header">
@@ -37,7 +42,7 @@ class Frame extends Component {
                             style={{height: '100%', borderRight: 0}}
                             onClick={this.handleNav}
                         >
-                            {
+                            {/*{
                                 menus.map(item => {
                                     return (
                                         <Menu.Item
@@ -46,7 +51,41 @@ class Frame extends Component {
                                         >
                                             {item.title}
                                         </Menu.Item>
+                                    )
+                                })
+                            }*/}
+                            {
+                                menus.map(item => {
+                                    return (
+                                        <SubMenu
+                                            key={item.pathname}
+                                            title={
+                                                <span>
+                                                    {
+                                                        item.icon
+                                                    }
+                                                    <span>{item.title}</span>
+                                                </span>
+                                            }
+                                        >
+                                            {/*通过pathname来判断应该渲染哪几个*/}
+                                            {
+                                                subMenus.filter(subItem =>subItem.mainLevel === item.pathname)
+                                                    .map(subItem => {
+                                                        return (
+                                                            <Menu.Item
+                                                                key={subItem.pathname}
+                                                                icon={subItem.icon}
+                                                            >
 
+                                                                {
+                                                                    subItem.subTitle
+                                                                }
+                                                            </Menu.Item>
+                                                        )
+                                                    })
+                                            }
+                                        </SubMenu>
                                     )
                                 })
                             }
@@ -54,7 +93,7 @@ class Frame extends Component {
                     </Sider>
                     <Layout style={{padding: '0 24px 24px'}}>
                         <Breadcrumb style={{margin: '16px 0'}}>
-                            <Breadcrumb.Item>Home</Breadcrumb.Item>
+                            <Breadcrumb.Item>首页</Breadcrumb.Item>
                             <Breadcrumb.Item>List</Breadcrumb.Item>
                             <Breadcrumb.Item>App</Breadcrumb.Item>
                         </Breadcrumb>
