@@ -19,10 +19,19 @@ const subMenus = adminRouteSecond.filter(item => item.subNav)
 class Frame extends Component {
 
     //切换页面
+    /*
+    * handleNav 操控的是Menu.Item
+    * handleSubMenuClick 操控的是第一级目录
+    *
+    * */
     handleNav = ({item, key, keyPath, domEvent}) => {
-        console.log({item, keyPath, domEvent})
+        console.log({item})
         this.props.history.replace(key)
     }
+    handleSubMenuClick = ({key}) => {
+        this.props.history.replace(key)
+    }
+
 
     render() {
         const {pathname} = this.props.location
@@ -42,20 +51,20 @@ class Frame extends Component {
                             style={{height: '100%', borderRight: 0}}
                             onClick={this.handleNav}
                         >
-                            {/*{
-                                menus.map(item => {
+                            {/*单独渲染首页*/}
+                            {
+                                menus.filter(item => item.title === '首页').map(item => {
                                     return (
-                                        <Menu.Item
-                                            key={item.pathname}
-                                            icon={item.icon}
+                                        <Menu.Item key={item.pathname}
+                                                   icon={item.icon}
                                         >
                                             {item.title}
                                         </Menu.Item>
                                     )
                                 })
-                            }*/}
+                            }
                             {
-                                menus.map(item => {
+                                menus.filter(item => item.title !== '首页').map(item => {
                                     return (
                                         <SubMenu
                                             key={item.pathname}
@@ -67,10 +76,11 @@ class Frame extends Component {
                                                     <span>{item.title}</span>
                                                 </span>
                                             }
+                                            onTitleClick={this.handleSubMenuClick}
                                         >
                                             {/*通过pathname来判断应该渲染哪几个*/}
                                             {
-                                                subMenus.filter(subItem =>subItem.mainLevel === item.pathname)
+                                                subMenus.filter(subItem => subItem.mainLevel === item.pathname)
                                                     .map(subItem => {
                                                         return (
                                                             <Menu.Item
