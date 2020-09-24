@@ -17,28 +17,22 @@ const subMenus = adminRouteSecond.filter(item => item.subNav)
 
 @withRouter
 class Frame extends Component {
-
-    state = {
-        title:'',
-        subTitle:''//二级导航条标题
-
-    }
+    
     //切换页面
     /*
     * handleNav 操控的是Menu.Item
     * handleSubMenuClick 操控的是第一级目录
     *
     * */
+
+
     handleNav = ({item, key, keyPath}) => {
         //获取一级标题与二级标题
         const title = this.getTitle(keyPath[1])
         if (key !== '/admin/dashboard'){
             const subTitle = item.node.innerText
-
-            this.setState({
-                title,
-                subTitle
-            })
+            window.localStorage.setItem('title',title)
+            window.localStorage.setItem('subTitle',subTitle)
         }
 
         this.props.history.replace(key)
@@ -64,7 +58,9 @@ class Frame extends Component {
     render() {
         const {pathname} = this.props.location
         const targetPath = pathname === '/admin' ? '/admin/dashboard' : pathname
-        const {title,subTitle} = this.state
+        const title = window.localStorage.getItem('title')
+        const subTitle = window.localStorage.getItem('subTitle')
+        console.log({title,subTitle})
         return (
             <Layout>
                 <Header className="header">
@@ -143,7 +139,7 @@ class Frame extends Component {
                         <Content
                             className="site-layout-background"
                             style={{
-                                padding: 24,
+                                padding: 12,
                                 margin: 0,
                                 minHeight: 280,
                             }}
