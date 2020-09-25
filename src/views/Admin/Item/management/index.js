@@ -101,10 +101,12 @@ export default class ItemManagement extends Component {
     onFinish = (values) => {
         console.log('Success:', values);
     };
-
+    //添加品牌
+    handleAddBrand = () =>{
+        this.props.history.push('/admin/item/addbrand')
+    }
     render() {
 
-        const {selectedRowKeys} = this.state
         return (
             <>
                 <Form
@@ -121,7 +123,11 @@ export default class ItemManagement extends Component {
                             <h3>筛选搜索</h3>
                         </Col>
                         <Col>
-                            <Button type='primary' htmlType="submit">查询结果</Button>
+                            <Button type='primary'
+                                    htmlType="submit"
+                            >
+                                查询结果
+                            </Button>
                         </Col>
                     </Row>
                     <Row>
@@ -136,7 +142,7 @@ export default class ItemManagement extends Component {
                     </Row>
                 </Form>
                 <Card title="数据列表"
-                      extra={<Button>添加</Button>}
+                      extra={<Button onClick={this.handleAddBrand}>添加</Button>}
                       style={{width: '100%', marginTop: 10}}>
                     <Table
                         columns={this.state.columns}

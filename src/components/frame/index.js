@@ -13,7 +13,6 @@ const {SubMenu} = Menu
 const menus = adminRouteSecond.filter(item => item.isNav)
 const subMenus = adminRouteSecond.filter(item => item.subNav)
 
-/*映射表，用于完成面包屑功能*/
 
 @withRouter
 class Frame extends Component {
@@ -34,7 +33,6 @@ class Frame extends Component {
             window.localStorage.setItem('title',title)
             window.localStorage.setItem('subTitle',subTitle)
         }
-
         this.props.history.replace(key)
     }
     handleSubMenuClick = ({key}) => {
@@ -60,7 +58,6 @@ class Frame extends Component {
         const targetPath = pathname === '/admin' ? '/admin/dashboard' : pathname
         const title = window.localStorage.getItem('title')
         const subTitle = window.localStorage.getItem('subTitle')
-        console.log({title,subTitle})
         return (
             <Layout>
                 <Header className="header">
@@ -146,7 +143,7 @@ class Frame extends Component {
                         >
                             {this.props.children}
                         </Content>
-                        <Footer style={{textAlign: 'center'}}>Ant Design ©2018 Created by Ant UED</Footer>
+                        <Footer style={{textAlign: 'center'}}>Mall Design ©2020 Created by luoS</Footer>
                     </Layout>
                 </Layout>
             </Layout>

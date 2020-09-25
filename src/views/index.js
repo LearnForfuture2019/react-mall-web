@@ -41,6 +41,10 @@ const ItemManagement =Loadable({
     loader:()=>import('./Admin/Item/management'),
     loading:Loading
 })
+const AddBrand =Loadable({
+    loader:()=>import('./Admin/Item/addBrand'),
+    loading:Loading
+})
 
 
 const OrderList =Loadable({
@@ -115,6 +119,7 @@ export {
     ItemClassification,
     ItemType,
     ItemManagement,
+    AddBrand,
     MarketingActivity,
     MarketingCoupon,
     MarketingBrand,

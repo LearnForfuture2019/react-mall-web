@@ -2,7 +2,7 @@ import React from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
 import Frame from "./components/frame";
 import {DashBoard} from './views'
-import {adminRouteSecond} from './routes'
+import {adminRouteSecond,adminRouteThird} from './routes'
 const menus = adminRouteSecond.filter(route => route.subNav)
 export default class App extends React.Component {
     render() {
@@ -18,6 +18,15 @@ export default class App extends React.Component {
                                        key={route.pathname}
                                        component={route.component}
                                 />
+                            )
+                        })
+                    }
+                    {
+                        adminRouteThird.map(route =>{
+                            return (
+                                <Route path={route.pathname}
+                                       component={route.component}
+                                       key={route.pathname}/>
                             )
                         })
                     }

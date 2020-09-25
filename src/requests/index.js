@@ -27,3 +27,5 @@ service.interceptors.response.use(resp =>{
 export const getBrandList = () => {
     return  service.get('/brand/listAll')
 }
+
+//

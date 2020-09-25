@@ -22,7 +22,8 @@ import {
     OrderList,
     OrderSettings,
     OrderReturnRequest,
-    OrderReturnReason
+    OrderReturnReason,
+    AddBrand
 } from '../views'
 
 import {PieChartOutlined} from '@ant-design/icons'
@@ -232,4 +233,10 @@ export const adminRouteSecond = [
         icon:<PieChartOutlined />
     },
 ]
-
+//三级目录
+export const adminRouteThird = [
+    {
+        pathname:'/admin/item/addBrand',
+        component:AddBrand
+    }
+]
