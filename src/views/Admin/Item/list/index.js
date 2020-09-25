@@ -11,7 +11,7 @@ import {
     Card,
     Table
 } from 'antd';
-import {getItemList} from '../../../../requests'
+import {getBrandList} from '../../../../requests'
 
 const {Group} = Button
 const {Option} = Select
@@ -74,9 +74,9 @@ export default class Item extends React.Component {
     handleChange = (value) => {
         this.formRef.current.setFieldsValue(value)
     }
-    getDatas = () => {
+    /*getDatas = () => {
         //发送ajax请求
-        getItemList()
+        getBrandList()
             .then(resp => {
                 const columnKeys = Object.keys(resp.list[0])
                 const columns = this.createColumns(columnKeys)
@@ -88,7 +88,7 @@ export default class Item extends React.Component {
                     data
                 })
             })
-    }
+    }*/
     createColumns = (columnKeys) => {
         const columns = []
         columnKeys.map(item => {
@@ -113,9 +113,9 @@ export default class Item extends React.Component {
         return columns
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
         this.getDatas()
-    }
+    }*/
 
     render() {
         const {columns, data} = this.state

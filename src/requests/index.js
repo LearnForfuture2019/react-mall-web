@@ -6,7 +6,7 @@ const isDev =process.env.NODE_ENV === 'development'
 
 /*构建axios实例*/
 const service = axios.create({
-    baseURL:'http://rap2api.taobao.org/app/mock/267369'
+    baseURL:isDev?'http://123.57.51.177:8080':null
 })
 
 //request拦截器
@@ -16,12 +16,14 @@ service.interceptors.request.use(config =>{
 
 //response拦截器
 service.interceptors.response.use(resp =>{
-    if (resp.data.code === 200){
-        return resp.data.data
+    if (resp.status === 200){
+        return resp.data
     }
+
+
 })
 
-//获取商品列表
-export const getItemList = () => {
-    return  service.post('/api/v2/item/list')
+//获取所有品牌列表
+export const getBrandList = () => {
+    return  service.get('/brand/listAll')
 }
