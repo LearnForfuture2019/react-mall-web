@@ -1,6 +1,17 @@
 import React from 'react';
 
-import {Form, Input, Button, Row, Col, Select, TreeSelect,Card} from 'antd';
+import {
+    Form,
+    Input,
+    Button,
+    Row,
+    Col,
+    Select,
+    TreeSelect,
+    Card,
+    Table
+} from 'antd';
+import {getItemList} from '../../../../requests'
 
 const {Group} = Button
 const {Option} = Select
@@ -13,6 +24,7 @@ const layout = {
         span: 16,
     },
 };
+//TreeSelect组件数据
 const treeData = [
     {
         title: 'Node1',
@@ -33,7 +45,24 @@ const treeData = [
         value: '0-1',
     },
 ];
+
+const mapToTitle = {
+    id: '编号',
+    img: '商品图片',
+    brand: '商品名称',
+    price: '价格',
+    title: '标签',
+    sort: '排序',
+    saved: 'SKU库存',
+    sales: '销量',
+    audit: '审核状态'
+
+}
 export default class Item extends React.Component {
+    state = {
+        data: [],
+        columns: []
+    }
     formRef = React.createRef()
     onFinish = (values) => {
         console.log('Success:', values);
@@ -45,8 +74,51 @@ export default class Item extends React.Component {
     handleChange = (value) => {
         this.formRef.current.setFieldsValue(value)
     }
+    getDatas = () => {
+        //发送ajax请求
+        getItemList()
+            .then(resp => {
+                const columnKeys = Object.keys(resp.list[0])
+                const columns = this.createColumns(columnKeys)
+                console.log(columns)
+                const data = resp.list
+                console.log(data)
+                this.setState({
+                    columns,
+                    data
+                })
+            })
+    }
+    createColumns = (columnKeys) => {
+        const columns = []
+        columnKeys.map(item => {
+            columns.push({
+                key: item,
+                dataIndex: item,
+                title: mapToTitle[item]
+            })
+        })
+        columns.push({
+            title: '操作',
+            key: 'action',
+            render: () => {
+                return (
+                    <Group>
+                        <Button>编辑</Button>
+                        <Button danger>删除</Button>
+                    </Group>
+                )
+            }
+        })
+        return columns
+    }
+
+    componentDidMount() {
+        this.getDatas()
+    }
 
     render() {
+        const {columns, data} = this.state
         return (
             <>
                 <Form
@@ -159,7 +231,10 @@ export default class Item extends React.Component {
                 </Form>
                 <Card title="数据列表"
                       extra={<Button>添加</Button>}
-                      style={{ width: '100%' }}>
+                      style={{width: '100%'}}>
+                    <Table
+                           columns={columns}
+                           dataSource={data}/>
                 </Card>
             </>
         )
