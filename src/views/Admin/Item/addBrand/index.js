@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Form, Input, Button,Upload,Switch} from 'antd';
+import {Form, Input, Button,Upload,Radio} from 'antd';
 import axios from 'axios'
 const layout = {
     labelCol: {
@@ -68,7 +68,6 @@ export default class AddBrand extends Component {
             })
 
     }
-
 
     render() {
         return (
@@ -145,14 +144,21 @@ export default class AddBrand extends Component {
                     label="是否显示:"
 
                 >
-                    <Switch defaultChecked onChange={this.handleSwitchClick.bind(this,'showStatus')}/>
+                        <Radio.Group>
+                            <Radio value={1}>是</Radio>
+                            <Radio value={0}>否</Radio>
+                        </Radio.Group>
                 </Form.Item>
                 <Form.Item
                     name="factoryStatus"
                     label="品牌制造商: "
 
                 >
-                    <Switch defaultChecked onChange={this.handleSwitchClick.bind(this,'factoryStatus')}/>
+                    {/*<Switch defaultChecked onChange={this.handleSwitchClick.bind(this,'factoryStatus')}/>*/}
+                    <Radio.Group>
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                    </Radio.Group>
                 </Form.Item>
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">
