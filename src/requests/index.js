@@ -28,4 +28,12 @@ export const getBrandList = () => {
     return  service.get('/brand/listAll')
 }
 
-//
+//添加品牌
+export const createBrand  = (data) =>{
+    return service.post('/brand/create',data)
+}
+
+//查询指定id品牌
+export const findeBrandById = (id) => {
+    return service.get(`/brand/${id}`)
+}

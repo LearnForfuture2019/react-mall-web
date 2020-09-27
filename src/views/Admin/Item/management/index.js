@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Card, Col, Form, Input, Row, Switch, Table, Tag} from 'antd'
-import {getBrandList} from '../../../../requests'
+import {getBrandList,findeBrandById} from '../../../../requests'
 
 const layout = {
     labelCol: {
@@ -85,7 +85,6 @@ export default class ItemManagement extends Component {
             .then(resp => {
                 if (resp.code === 200) {
                     const data = resp.data
-                    console.log(data)
                     const columnKeys = Object.keys(resp.data[0]).slice(0,8)
                     const columns = this.createColumns(columnKeys)
                     //更新data数据
@@ -98,8 +97,26 @@ export default class ItemManagement extends Component {
     }
 
 
-    onFinish = (values) => {
-        console.log('Success:', values);
+    findBrand = (values) => {
+        const id = Object.values(values)[0]
+        //获取数据将其展示出来
+        findeBrandById(id)
+            .then(resp =>{
+                if (resp.code === 200) {
+                    const data = []
+                    data.push(resp.data)
+                    console.log(typeof data)
+                    const columnKeys = Object.keys(resp.data).slice(0,8)
+                    const columns = this.createColumns(columnKeys)
+                    //更新data数据
+                    this.setState({
+                        columns,
+                        data
+                    })
+
+                }
+            })
+
     };
     //添加品牌
     handleAddBrand = () =>{
@@ -117,7 +134,7 @@ export default class ItemManagement extends Component {
                     initialValues={{
                         remember: true,
                     }}
-                    onFinish={this.onFinish}
+                    onFinish={this.findBrand}
                     style={{border: '1px solid #dedede', padding: 10, backgroundColor: 'white'}}
                 >
                     <Row justify='space-between'>

@@ -1,6 +1,13 @@
 import React, {Component} from 'react'
-import {Form, Input, Button,Upload,Radio} from 'antd';
+import {
+    Form,
+    Input,
+    Button,
+    Upload,
+    Radio
+} from 'antd';
 import axios from 'axios'
+import {createBrand} from '../../../../requests'
 const layout = {
     labelCol: {
         span: 4,
@@ -21,8 +28,16 @@ export default class AddBrand extends Component {
         bigPic:''
     }
     formRef = React.createRef();
+
     onFinish = (values) => {
         console.log(values);
+        //发送ajax请求
+        createBrand(values)
+            .then(resp =>{
+                if (resp.code === 200){
+                    this.props.history.replace('/admin/item/management')
+                }
+            })
     };
     onReset = () => {
         this.formRef.current.resetFields();
