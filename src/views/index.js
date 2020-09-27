@@ -46,6 +46,11 @@ const AddBrand =Loadable({
     loading:Loading
 })
 
+const EditBrand = Loadable({
+    loader: () =>import('./Admin/Item/editBrand/index'),
+    loading:Loading
+})
+
 
 const OrderList =Loadable({
     loader:()=>import('./Admin/order/list'),
@@ -120,6 +125,7 @@ export {
     ItemType,
     ItemManagement,
     AddBrand,
+    EditBrand,
     MarketingActivity,
     MarketingCoupon,
     MarketingBrand,

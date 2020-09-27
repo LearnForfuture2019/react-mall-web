@@ -23,7 +23,8 @@ import {
     OrderSettings,
     OrderReturnRequest,
     OrderReturnReason,
-    AddBrand
+    AddBrand,
+    EditBrand
 } from '../views'
 
 import {PieChartOutlined} from '@ant-design/icons'
@@ -238,5 +239,9 @@ export const adminRouteThird = [
     {
         pathname:'/admin/item/addBrand',
         component:AddBrand
+    },
+    {
+        pathname:'/admin/item/editbrand:id',
+        component:EditBrand
     }
 ]

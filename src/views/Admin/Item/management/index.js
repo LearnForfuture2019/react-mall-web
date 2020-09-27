@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Card, Col, Form, Input, Row, Switch, Table, Tag} from 'antd'
-import {getBrandList,findeBrandById} from '../../../../requests'
+import {getBrandList, findeBrandById} from '../../../../requests'
 
 const layout = {
     labelCol: {
@@ -13,12 +13,12 @@ const layout = {
 const {Group} = Button
 
 const titleMap = {
-    id:'编号',
-    name:'品牌名称',
-    firstLetter:'品牌首字母',
-    sort:'排序',
-    productCount:'商品',
-    productCommentCount:'评论'
+    id: '编号',
+    name: '品牌名称',
+    firstLetter: '品牌首字母',
+    sort: '排序',
+    productCount: '商品',
+    productCommentCount: '评论'
 }
 export default class ItemManagement extends Component {
     state = {
@@ -29,22 +29,22 @@ export default class ItemManagement extends Component {
 
     createColumns = (columnKeys) => {
         const columns = columnKeys.map(item => {
-            if (item === 'factoryStatus'){
+            if (item === 'factoryStatus') {
                 return {
-                    title:'品牌制造商',
-                    key:item,
-                    render:(text,record)=>{
+                    title: '品牌制造商',
+                    key: item,
+                    render: (text, record) => {
                         return (
                             <Switch defaultChecked={text.factoryStatus === 1}
                                     onChange={this.handleSwitch}/>
                         )
                     }
                 }
-            }else if (item === 'showStatus'){
+            } else if (item === 'showStatus') {
                 return {
-                    title:'是否显示',
-                    key:item,
-                    render:(text,record)=>{
+                    title: '是否显示',
+                    key: item,
+                    render: (text, record) => {
                         return (
                             <Switch defaultChecked={text.showStatus === 1}
                                     onChange={this.handleSwitch}/>
@@ -55,16 +55,16 @@ export default class ItemManagement extends Component {
             return {
                 title: titleMap[item],
                 key: item,
-                dataIndex:item
+                dataIndex: item
             }
         })
         columns.push({
-            title:'操作',
-            key:'action',
-            render:(text,record) =>{
+            title: '操作',
+            key: 'action',
+            render: (text, record) => {
                 return (
                     <Group>
-                        <Button>编辑</Button>
+                        <Button onClick={this.toEditBrand.bind(this,record)}>编辑</Button>
                         <Button danger>删除</Button>
                     </Group>
                 )
@@ -85,7 +85,7 @@ export default class ItemManagement extends Component {
             .then(resp => {
                 if (resp.code === 200) {
                     const data = resp.data
-                    const columnKeys = Object.keys(resp.data[0]).slice(0,8)
+                    const columnKeys = Object.keys(resp.data[0]).slice(0, 8)
                     const columns = this.createColumns(columnKeys)
                     //更新data数据
                     this.setState({
@@ -98,15 +98,16 @@ export default class ItemManagement extends Component {
 
 
     findBrand = (values) => {
+
         const id = Object.values(values)[0]
         //获取数据将其展示出来
         findeBrandById(id)
-            .then(resp =>{
+            .then(resp => {
                 if (resp.code === 200) {
                     const data = []
                     data.push(resp.data)
                     console.log(typeof data)
-                    const columnKeys = Object.keys(resp.data).slice(0,8)
+                    const columnKeys = Object.keys(resp.data).slice(0, 8)
                     const columns = this.createColumns(columnKeys)
                     //更新data数据
                     this.setState({
@@ -116,13 +117,20 @@ export default class ItemManagement extends Component {
 
                 }
             })
-
     };
     //添加品牌
-    handleAddBrand = () =>{
-        window.localStorage.setItem('subTitle','添加品牌')
+    handleAddBrand = () => {
+        window.localStorage.setItem('subTitle', '添加品牌')
         this.props.history.push('/admin/item/addbrand')
 
+    }
+    //编辑品牌
+    toEditBrand = (record) =>{
+        window.localStorage.setItem('subTitle', '编辑品牌')
+        console.log(record)
+        this.props.history.push({
+            pathname:`/admin/item/editBrand${record.id}`
+        })
     }
     render() {
 

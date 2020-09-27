@@ -7,7 +7,8 @@ import {
     Radio
 } from 'antd';
 import axios from 'axios'
-import {createBrand} from '../../../../requests'
+import {findeBrandById} from '../../../../requests'
+
 const layout = {
     labelCol: {
         span: 4,
@@ -22,49 +23,67 @@ const tailLayout = {
         span: 16,
     },
 };
-export default class AddBrand extends Component {
+export default class EditBrand extends Component {
     state = {
-        logo:'',
-        bigPic:''
+        bigPic: '',
+        brandStory: '',
+        firstLetter: '',
+        logo: '',
+        name: '',
+        sort: '',
+        factoryStatus: '',
+        showStatus: '',
+        productCount: '',
+        productCommentCount: '',
+        id:''
     }
     formRef = React.createRef();
 
     onFinish = (values) => {
-        console.log(values);
-        //发送ajax请求
-        createBrand(values)
-            .then(resp =>{
-                if (resp.code === 200){
-                    this.props.history.replace('/admin/item/management')
-                }
-            })
+
     };
     onReset = () => {
         this.formRef.current.resetFields();
     };
 
+    componentDidMount() {
+        const id = this.props.match.params.id
+        findeBrandById(id)
+            .then(resp => {
+                console.log(resp)
+                if (resp.code === 200) {
+                    //更新状态
+                    const data = resp.data
+
+                    console.log(this.formRef.current.getFieldsValue());
+                    console.log(this.formRef.current.setFieldsValue(data));
+                    console.log(this.formRef.current.getFieldsValue());
+                }
+            })
+    }
+
     //上传图片
-    handleUpload = (type,{file}) => {
+    handleUpload = (type, {file}) => {
         /*利用贴图库来上传url地址*/
         //创建Form表单
         let form = new FormData()
         //添加token
-        form.append('Token','8e289ea49bf85cbe6e7e877aef2' +
+        form.append('Token', '8e289ea49bf85cbe6e7e877aef2' +
             '6786a69c48c73:avfGBksVg5hRMRSl-iMKKMZFXE8=:eyJ' +
             'kZWFkbGluZSI6MTYwMTE3MDQ3NSwiYWN0aW9uIjoiZ2V0IiwidW' +
             'lkIjoiNzI2NTA5IiwiYWlkI' +
             'joiMTcyMDUyNiIsImZyb20iOiJmaWxlIn0=')
         //添加file字段
-        form.append('file',file)
+        form.append('file', file)
         //发送ajax请求
-        axios.post('http://up.imgapi.com/',form)
+        axios.post('http://up.imgapi.com/', form)
             .then(resp => {
-                if (resp.status === 200){
+                if (resp.status === 200) {
                     //成功，保存url地址
                     const imgUrl = resp.data.linkurl
                     //更新表单数据
                     this.formRef.current.setFieldsValue({
-                        [type]:imgUrl
+                        [type]: imgUrl
                     })
 
                 }
@@ -76,6 +95,7 @@ export default class AddBrand extends Component {
     }
 
     render() {
+
         return (
             <Form
                 {...layout}
@@ -106,17 +126,17 @@ export default class AddBrand extends Component {
                     label="品牌LOGO"
                     rules={[
                         {
-                            required:true,
+                            required: true,
                         }
                     ]}
                 >
-                   <Upload
-                       showUploadList={false}
-                       customRequest={this.handleUpload.bind(this,'logo')}
-                   >
-                       <Button type='primary'>点击上传</Button>
-                       <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
-                   </Upload>
+                    <Upload
+                        customRequest={this.handleUpload.bind(this, 'logo')}
+                    >
+                        <Button type='primary'>点击上传</Button>
+                        <p style={{color: '#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
+                        
+                    </Upload>
                 </Form.Item>
                 <Form.Item
                     name="bigPic"
@@ -124,11 +144,10 @@ export default class AddBrand extends Component {
 
                 >
                     <Upload
-                        showUploadList={false}
-                        customRequest={this.handleUpload.bind(this,'bigPic')}
+                        customRequest={this.handleUpload.bind(this, 'bigPic')}
                     >
                         <Button type='primary'>点击上传</Button>
-                        <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
+                        <p style={{color: '#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
                     </Upload>
                 </Form.Item>
                 <Form.Item
@@ -150,17 +169,16 @@ export default class AddBrand extends Component {
                     label="是否显示:"
 
                 >
-                        <Radio.Group>
-                            <Radio value={1}>是</Radio>
-                            <Radio value={0}>否</Radio>
-                        </Radio.Group>
+                    <Radio.Group>
+                        <Radio value={1}>是</Radio>
+                        <Radio value={0}>否</Radio>
+                    </Radio.Group>
                 </Form.Item>
                 <Form.Item
                     name="factoryStatus"
                     label="品牌制造商: "
 
                 >
-                    {/*<Switch defaultChecked onChange={this.handleSwitchClick.bind(this,'factoryStatus')}/>*/}
                     <Radio.Group>
                         <Radio value={1}>是</Radio>
                         <Radio value={0}>否</Radio>

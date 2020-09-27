@@ -6,6 +6,7 @@ import {adminRouteSecond,adminRouteThird} from './routes'
 const menus = adminRouteSecond.filter(route => route.subNav)
 export default class App extends React.Component {
     render() {
+
         return (
             <Frame>
                 <Switch>
@@ -36,7 +37,7 @@ export default class App extends React.Component {
                     <Redirect to='/admin/marketing/activity' from='/admin/marketing' exact/>
                     <Redirect to='/admin/permission/usr' from='/admin/permission' exact/>
                     {/*访问其它url，返回404*/}
-                    <Redirect to='/404'/>
+                    {/*<Redirect to='/404'/>*/}
                 </Switch>
             </Frame>
         )
