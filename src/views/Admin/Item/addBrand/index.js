@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Form, Input, Button,Upload,Switch} from 'antd';
-
+import axios from 'axios'
 const layout = {
     labelCol: {
         span: 4,
@@ -16,7 +16,10 @@ const tailLayout = {
     },
 };
 export default class AddBrand extends Component {
-
+    state = {
+        logo:'',
+        bigPic:''
+    }
     formRef = React.createRef();
     onFinish = (values) => {
         console.log(values);
@@ -26,12 +29,46 @@ export default class AddBrand extends Component {
     };
     handleSwitchClick =(item,checked)=>{
         const num = checked?1:0
-        console.log(item)
+        console.log(this.formRef.current.getFieldValue())
         this.formRef.current.setFieldsValue({
             [item]:num
         })
+        console.log(this.formRef.current.getFieldValue())
 
     }
+
+    //上传图片
+    handleUpload = (type,{file}) => {
+        /*利用贴图库来上传url地址*/
+        //创建Form表单
+        let form = new FormData()
+        //添加token
+        form.append('Token','8e289ea49bf85cbe6e7e877aef2' +
+            '6786a69c48c73:avfGBksVg5hRMRSl-iMKKMZFXE8=:eyJ' +
+            'kZWFkbGluZSI6MTYwMTE3MDQ3NSwiYWN0aW9uIjoiZ2V0IiwidW' +
+            'lkIjoiNzI2NTA5IiwiYWlkI' +
+            'joiMTcyMDUyNiIsImZyb20iOiJmaWxlIn0=')
+        //添加file字段
+        form.append('file',file)
+        //发送ajax请求
+        axios.post('http://up.imgapi.com/',form)
+            .then(resp => {
+                if (resp.status === 200){
+                    //成功，保存url地址
+                    const imgUrl = resp.data.linkurl
+                    //更新表单数据
+                    this.formRef.current.setFieldsValue({
+                        [type]:imgUrl
+                    })
+
+                }
+            })
+            .catch(err => {
+                console.log('请再次上传图片')
+            })
+
+    }
+
 
     render() {
         return (
@@ -68,7 +105,10 @@ export default class AddBrand extends Component {
                         }
                     ]}
                 >
-                   <Upload>
+                   <Upload
+                       showUploadList={false}
+                       customRequest={this.handleUpload.bind(this,'logo')}
+                   >
                        <Button type='primary'>点击上传</Button>
                        <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
                    </Upload>
@@ -76,8 +116,12 @@ export default class AddBrand extends Component {
                 <Form.Item
                     name="bigPic"
                     label="品牌专区大图"
+
                 >
-                    <Upload >
+                    <Upload
+                        showUploadList={false}
+                        customRequest={this.handleUpload.bind(this,'bigPic')}
+                    >
                         <Button type='primary'>点击上传</Button>
                         <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
                     </Upload>

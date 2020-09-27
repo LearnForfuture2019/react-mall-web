@@ -103,7 +103,9 @@ export default class ItemManagement extends Component {
     };
     //添加品牌
     handleAddBrand = () =>{
+        window.localStorage.setItem('subTitle','添加品牌')
         this.props.history.push('/admin/item/addbrand')
+
     }
     render() {
 
