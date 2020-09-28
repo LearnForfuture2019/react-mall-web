@@ -25,7 +25,8 @@ const tailLayout = {
 export default class AddBrand extends Component {
     state = {
         logo:'',
-        bigPic:''
+        bigPic:'',
+
     }
     formRef = React.createRef();
 
@@ -35,7 +36,7 @@ export default class AddBrand extends Component {
         createBrand(values)
             .then(resp =>{
                 if (resp.code === 200){
-                    this.props.history.replace('/admin/item/management')
+                    // this.props.history.replace('/admin/item/management')
                 }
             })
     };
@@ -62,6 +63,10 @@ export default class AddBrand extends Component {
                 if (resp.status === 200){
                     //成功，保存url地址
                     const imgUrl = resp.data.linkurl
+                    //更新url地址
+                    this.setState({
+                        [type]:imgUrl
+                    })
                     //更新表单数据
                     this.formRef.current.setFieldsValue({
                         [type]:imgUrl
@@ -76,6 +81,7 @@ export default class AddBrand extends Component {
     }
 
     render() {
+        const {logo,bigPic} = this.state
         return (
             <Form
                 {...layout}
@@ -111,10 +117,13 @@ export default class AddBrand extends Component {
                     ]}
                 >
                    <Upload
-                       showUploadList={false}
+                        listType='picture'
+                        showUploadList={false}
                        customRequest={this.handleUpload.bind(this,'logo')}
                    >
-                       <Button type='primary'>点击上传</Button>
+                       {
+                           logo? <img src={logo} alt="image" style={{width:100,height:100}} />: <Button type='primary'>点击上传</Button>
+                       }
                        <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
                    </Upload>
                 </Form.Item>
@@ -125,10 +134,15 @@ export default class AddBrand extends Component {
                 >
                     <Upload
                         showUploadList={false}
+                        listType='picture'
                         customRequest={this.handleUpload.bind(this,'bigPic')}
                     >
-                        <Button type='primary'>点击上传</Button>
-                        <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
+                        <div>
+                            {
+                                bigPic? <img src={bigPic} alt="image" style={{width:100,height:100}} />: <Button type='primary'>点击上传</Button>
+                            }
+                            <p style={{color:'#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
+                        </div>
                     </Upload>
                 </Form.Item>
                 <Form.Item

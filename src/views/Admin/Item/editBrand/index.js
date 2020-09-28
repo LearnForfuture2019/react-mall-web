@@ -35,7 +35,7 @@ export default class EditBrand extends Component {
         showStatus: '',
         productCount: '',
         productCommentCount: '',
-        id:''
+        id: ''
     }
     formRef = React.createRef();
 
@@ -54,10 +54,13 @@ export default class EditBrand extends Component {
                 if (resp.code === 200) {
                     //更新状态
                     const data = resp.data
-
-                    console.log(this.formRef.current.getFieldsValue());
+                    console.log(data)
                     console.log(this.formRef.current.setFieldsValue(data));
-                    console.log(this.formRef.current.getFieldsValue());
+                    //更新url状态
+                    this.setState({
+                        logo:data.logo,
+                        bigPic:data.bigPic
+                    })
                 }
             })
     }
@@ -81,11 +84,14 @@ export default class EditBrand extends Component {
                 if (resp.status === 200) {
                     //成功，保存url地址
                     const imgUrl = resp.data.linkurl
+                    //更新图片url
+                    this.setState({
+                        [type]: imgUrl
+                    })
                     //更新表单数据
                     this.formRef.current.setFieldsValue({
                         [type]: imgUrl
                     })
-
                 }
             })
             .catch(err => {
@@ -95,7 +101,7 @@ export default class EditBrand extends Component {
     }
 
     render() {
-
+        const {logo, bigPic} = this.state
         return (
             <Form
                 {...layout}
@@ -132,10 +138,16 @@ export default class EditBrand extends Component {
                 >
                     <Upload
                         customRequest={this.handleUpload.bind(this, 'logo')}
+                        showUploadList={false}
                     >
-                        <Button type='primary'>点击上传</Button>
+                        {
+                            logo ?
+                                <img src={logo} alt="img" style={{width: 100, height: 100}}/>
+                                :
+                                <Button type='primary'>点击上传</Button>
+                        }
                         <p style={{color: '#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
-                        
+
                     </Upload>
                 </Form.Item>
                 <Form.Item
@@ -145,8 +157,14 @@ export default class EditBrand extends Component {
                 >
                     <Upload
                         customRequest={this.handleUpload.bind(this, 'bigPic')}
+                        showUploadList={false}
                     >
-                        <Button type='primary'>点击上传</Button>
+                        {
+                            bigPic ?
+                                <img src={bigPic} alt="img" style={{width: 100, height: 100}}/>
+                                :
+                                <Button type='primary'>点击上传</Button>
+                        }
                         <p style={{color: '#cecece'}}>只能上传png/jpg文件，且不超过10M</p>
                     </Upload>
                 </Form.Item>
