@@ -4,10 +4,10 @@ import {
     Input,
     Button,
     Upload,
-    Radio
+    Radio, message
 } from 'antd';
 import axios from 'axios'
-import {findeBrandById} from '../../../../requests'
+import {findBrandById,updateBrandById} from '../../../../requests'
 
 const layout = {
     labelCol: {
@@ -40,7 +40,17 @@ export default class EditBrand extends Component {
     formRef = React.createRef();
 
     onFinish = (values) => {
-
+        console.log(values)
+        updateBrandById(this.props.match.params.id,values)
+            .then(resp =>{
+                if (resp.code === 200){
+                    message.success('更新成功')
+                    //跳转到管理页面
+                    this.props.history.push('/admin/item/management')
+                }else {
+                    message.warning('更新失败')
+                }
+            })
     };
     onReset = () => {
         this.formRef.current.resetFields();
@@ -48,7 +58,7 @@ export default class EditBrand extends Component {
 
     componentDidMount() {
         const id = this.props.match.params.id
-        findeBrandById(id)
+        findBrandById(id)
             .then(resp => {
                 console.log(resp)
                 if (resp.code === 200) {

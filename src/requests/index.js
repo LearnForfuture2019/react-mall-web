@@ -11,6 +11,7 @@ const service = axios.create({
 
 //request拦截器
 service.interceptors.request.use(config =>{
+    console.log(config)
     return config
 })
 
@@ -34,6 +35,13 @@ export const createBrand  = (data) =>{
 }
 
 //查询指定id品牌
-export const findeBrandById = (id) => {
+export const findBrandById = (id) => {
     return service.get(`/brand/${id}`)
 }
+
+//根据id更新指定品牌
+export const updateBrandById  = (id,data) =>{
+    return service.put(`/brand/update/${id}`,data)
+}
+
+//模糊查询品牌

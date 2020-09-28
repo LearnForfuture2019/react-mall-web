@@ -1,6 +1,15 @@
 import React, {Component} from 'react'
-import {Button, Card, Col, Form, Input, Row, Switch, Table, Tag} from 'antd'
-import {getBrandList, findeBrandById} from '../../../../requests'
+import {
+    Button,
+    Card,
+    Col,
+    Form,
+    Input,
+    Row,
+    Switch,
+    Table,
+    message} from 'antd'
+import {getBrandList, findBrandById} from '../../../../requests'
 
 const layout = {
     labelCol: {
@@ -65,12 +74,15 @@ export default class ItemManagement extends Component {
                 return (
                     <Group>
                         <Button onClick={this.toEditBrand.bind(this,record)}>编辑</Button>
-                        <Button danger>删除</Button>
+                        <Button danger onClick={this.deleteBrand}>删除</Button>
                     </Group>
                 )
             }
         })
         return columns
+    }
+    deleteBrand = () =>{
+        message.success('success')
     }
     handleSwitch = (checked) => {
         console.log(`switch to ${checked}`);
@@ -101,7 +113,7 @@ export default class ItemManagement extends Component {
 
         const id = Object.values(values)[0]
         //获取数据将其展示出来
-        findeBrandById(id)
+        findBrandById(id)
             .then(resp => {
                 if (resp.code === 200) {
                     const data = []
@@ -114,7 +126,6 @@ export default class ItemManagement extends Component {
                         columns,
                         data
                     })
-
                 }
             })
     };
