@@ -9,7 +9,12 @@ import {
     Switch,
     Table,
     message} from 'antd'
-import {getBrandList, findBrandById} from '../../../../requests'
+import {
+    getBrandList,
+    findBrandById,
+    deleteBrandById,
+    findBrandByFuzzySearch
+} from '../../../../requests'
 
 const layout = {
     labelCol: {
@@ -47,7 +52,8 @@ export default class ItemManagement extends Component {
                             <Switch defaultChecked={text.factoryStatus === 1}
                                     onChange={this.handleSwitch}/>
                         )
-                    }
+                    },
+                    align:'center'
                 }
             } else if (item === 'showStatus') {
                 return {
@@ -58,13 +64,15 @@ export default class ItemManagement extends Component {
                             <Switch defaultChecked={text.showStatus === 1}
                                     onChange={this.handleSwitch}/>
                         )
-                    }
+                    },
+                    align:'center'
                 }
             }
             return {
                 title: titleMap[item],
                 key: item,
-                dataIndex: item
+                dataIndex: item,
+                align:'center'
             }
         })
         columns.push({
@@ -74,15 +82,28 @@ export default class ItemManagement extends Component {
                 return (
                     <Group>
                         <Button onClick={this.toEditBrand.bind(this,record)}>编辑</Button>
-                        <Button danger onClick={this.deleteBrand}>删除</Button>
+                        <Button danger onClick={this.deleteBrand.bind(this,record)}>删除</Button>
                     </Group>
                 )
-            }
+            },
+            align:'center'
         })
         return columns
     }
-    deleteBrand = () =>{
-        message.success('success')
+    deleteBrand = (record) =>{
+        deleteBrandById(record.id)
+            .then(resp =>{
+                if (resp.code === 200){
+                    message.success(resp.message)
+                }
+            })
+            .catch(err =>{
+                message.warning(err.message)
+            })
+            .finally(()=>{
+                //更新列表
+                this.getBrandListData()
+            })
     }
     handleSwitch = (checked) => {
         console.log(`switch to ${checked}`);
@@ -110,29 +131,31 @@ export default class ItemManagement extends Component {
 
 
     findBrand = (values) => {
-
-        const id = Object.values(values)[0]
         //获取数据将其展示出来
-        findBrandById(id)
-            .then(resp => {
+        findBrandByFuzzySearch(Object.values(values)[0])
+            .then(resp =>{
                 if (resp.code === 200) {
-                    const data = []
-                    data.push(resp.data)
-                    console.log(typeof data)
-                    const columnKeys = Object.keys(resp.data).slice(0, 8)
+                    const data = resp.data
+                    const columnKeys = Object.keys(resp.data[0]).slice(0, 8)
                     const columns = this.createColumns(columnKeys)
                     //更新data数据
                     this.setState({
-                        columns,
+                        data,
+                        columns
+                    })
+                }else if (resp.code === 501){
+                    const data = []
+                    this.setState({
                         data
                     })
                 }
             })
+
     };
     //添加品牌
     handleAddBrand = () => {
         window.localStorage.setItem('subTitle', '添加品牌')
-        this.props.history.push('/admin/item/addbrand')
+        this.props.history.push('/admin/item/addBrand')
 
     }
     //编辑品牌
@@ -189,6 +212,7 @@ export default class ItemManagement extends Component {
                             showSizeChanger: true,
                             showQuickJumper: true
                         }}
+                        bordered
                     />
                 </Card>
             </>

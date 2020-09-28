@@ -56,6 +56,7 @@ class Frame extends Component {
     render() {
         const {pathname} = this.props.location
         const targetPath = pathname === '/admin' ? '/admin/dashboard' : pathname
+        console.log(targetPath)
         const title = window.localStorage.getItem('title')
         const subTitle = window.localStorage.getItem('subTitle')
         return (
